@@ -365,6 +365,26 @@ class WriteProgramEnrollmentTaskTests(WriteEnrollmentTaskTestMixin, TestCase):
             "serena,z\r\n",
             expected_code_str,
         )
+    
+    def test_extra_columns(self):
+        enrollments = [
+            {'student_key': 'john', 'status': 'x', 'blood_type': 'O-'},
+            {'student_key': 'bob', 'status': 'y', 'eye_color': 'green'},
+            {'student_key': 'serena', 'status': 'z', 'favorite_dog_breed': 'chihuahua'},
+        ]
+        uploads_filestore.store(self.json_filepath, json.dumps(enrolls))
+        with mock.patch(
+                self.mock_base + self.mock_function,
+                new=self.mock_write_enrollments(any_successes, any_failures),
+        ):
+            self.spawn_task().wait()
+        self.assert_succeeded(
+            "student_key,status\r\n"
+            "john,x\r\n"
+            "bob,y\r\n"
+            "serena,z\r\n",
+            expected_code_str,
+        )
 
 
 @ddt.ddt

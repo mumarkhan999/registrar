@@ -11,6 +11,7 @@ from registrar.apps.enrollments.tests.factories import ProgramFactory
 from registrar.apps.enrollments.utils import (
     build_enrollment_job_status_name,
     is_enrollment_job_processing,
+    parse_enrollment_job_status_name,
 )
 
 
@@ -71,3 +72,29 @@ class IsEnrollmentJobProcessingTests(EnrollmentJobTests):
         task_name = build_enrollment_job_status_name(self.TASK_NAME, self.program.key)
         self.create_dummy_job_status(UserTaskStatus.IN_PROGRESS, self.user, task_name)
         self.assertFalse(is_enrollment_job_processing(self.program.key))
+
+@ddt.ddt
+class ParseEnrollmentJobNameTests(TestCase):
+
+    @ddt.unpack
+    @ddt.data(
+        ('program-01', 'write-enrollments'),
+        ('masters-of-eng', 'read-enrollments'),
+        ('prgramname', 'erase-all-enrollments'),
+        ('test', 'test'),
+        ('wewillstillallow', 'extra:colo:ns_inthetask')
+    )
+    def test_parse(self, program_key, task_name):
+        status_name = build_enrollment_job_status_name(program_key, task_name)
+        parsed_name = parse_enrollment_job_status_name(status_name)
+        self.assertIsNotNone(parsed_name)
+        self.assertEqual(program_key, parsed_name[0])
+        self.assertEqual(task_name, parsed_name[1])
+    
+    @ddt.data(
+        'notanenrollmentjobname',
+        'program-1~~taskname',
+    )
+    def test_parse_no_match(self, status_name):
+        parsed_name = parse_enrollment_job_status_name(status_name)
+        self.assertIsNone(parsed_name)
