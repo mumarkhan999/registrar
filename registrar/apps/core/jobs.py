@@ -25,7 +25,6 @@ from registrar.apps.core.filestore import get_filestore
 from registrar.apps.core.permissions import JOB_GLOBAL_READ
 from registrar.apps.enrollments.utils import parse_enrollment_job_status_name
 
-
 JobStatus = namedtuple(
     'JobStatus',
     ['job_id', 'created', 'state', 'program_key', 'task_name', 'result', 'text',],
@@ -112,8 +111,8 @@ def processing_job_with_prefix_exists(prefix):
         state__in=USER_TASK_STATUS_PROCESSING_STATES,
     ).exists()
 
-def _get_name_and_program(task_name):
-    return parse_enrollment_job_status_name(task_name)
+def _get_program_and_task_name(task_name):
+    return (None, None)
 
 
 def _make_job_status(task_status):
@@ -124,7 +123,7 @@ def _make_job_status(task_status):
         task_status.task_id,
         task_status.created,
         task_status.state,
-        *_get_program_and_task_name(task_status.name)
+        *_get_program_and_task_name(task_status.name),
         *_get_result(task_status),
     )
 

@@ -1,11 +1,11 @@
 """ Utilities for the enrollments app """
 import re
 
-from registrar.apps.core.constants import PROGRAM_KEY_PATTERN
 from registrar.apps.core.jobs import processing_job_with_prefix_exists
-
-
-ENROLLMENT_JOB_NAME_REGEX = re.compile(r'^{}:(.*?)$'.format(PROGRAM_KEY_PATTERN)) 
+from registrar.apps.enrollments.constants import (
+    ENROLLEMENT_JOB_NAME_TPL,
+    ENROLLMENT_JOB_NAME_PATTERN,
+)
 
 def build_enrollment_job_status_name(program_key, task_name):
     """
@@ -15,7 +15,7 @@ def build_enrollment_job_status_name(program_key, task_name):
         program_key (str): program key for the program we're writing enrollments
         task_name (str): the name of the task that is being executed
     """
-    return "{}:{}".format(program_key, task_name)
+    return ENROLLEMENT_JOB_NAME_TPL.format(program_key, task_name)
 
 def parse_enrollment_job_status_name(status_name):
     """
@@ -25,7 +25,7 @@ def parse_enrollment_job_status_name(status_name):
     Returns:
         (program_key, task_name)
     """
-    match = ENROLLMENT_JOB_NAME_REGEX.match(status_name)
+    match = re.match(ENROLLMENT_JOB_NAME_PATTERN, status_name)
     if match:
         return match.groups()
 

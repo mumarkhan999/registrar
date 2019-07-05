@@ -94,6 +94,7 @@ class JobStatusSerializer(serializers.Serializer):
     job_id = serializers.UUIDField()
     created = serializers.DateTimeField()
     state = serializers.ChoiceField(choices=STATUS_CHOICES)
+    program_key = serializers.CharField(allow_null=True)
+    task_name = serializers.CharField(allow_null=True)
     result = serializers.URLField(allow_null=True)
     text = serializers.CharField(allow_null=True)
-    name = serializers.CharField(allow_null=True)

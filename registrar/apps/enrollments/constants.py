@@ -1,6 +1,8 @@
 """ Constants for enrollments app """
 from enum import Enum
 
+from registrar.apps.core.constants import PROGRAM_KEY_PATTERN
+
 
 PROGRAM_CACHE_KEY_TPL = 'program:{uuid}'
 PROGRAM_CACHE_TIMEOUT = 120
@@ -30,6 +32,8 @@ ENROLLMENT_ERROR_INTERNAL = 'internal-error'
 
 LMS_ENROLLMENT_WRITE_MAX_SIZE = 25
 
+ENROLLEMENT_JOB_NAME_TPL = "{}:{}"
+ENROLLMENT_JOB_NAME_PATTERN = r'^{}:(.*?)$'.format(PROGRAM_KEY_PATTERN) 
 
 class EnrollmentWriteStatus(Enum):
     OK = 200

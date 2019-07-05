@@ -1680,6 +1680,8 @@ class JobStatusListView(S3MockMixin, RegistrarAPITestCase, AuthRequestMixin):
             'state': state,
             'job_id': cls.job_ids[n],
             'created': task_status.created.isoformat().replace('+00:00', 'Z'),
+            'program_key': None,
+            'task_name': None,
             'result': None,
             'text': None,
         }
