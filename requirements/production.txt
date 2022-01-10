@@ -30,7 +30,7 @@ botocore==1.23.31
     # via
     #   boto3
     #   s3transfer
-celery==4.4.7
+celery==5.2.2
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/base.txt
